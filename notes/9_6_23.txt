@@ -1,0 +1,83 @@
+
+load dictionary -> insert words into hash table -> 
+
+report uncrecognized words, and words that are too long (20+ characters)
+    - on report, specify line where error occured
+
+should be case insensitive (convert all capital letters in both dictionary and document upon seeing them)
+    - check ascii value greater than lowercase, then convert uppercase to lowercase by scaling factor
+
+- can ignore member functions that aren't used for this assignment.
+- implement linear probing or double hashing for collision resolution
+
+will be dealing with void pointers then casting them to correct type (
+
+inserting into hash table:
+    - loop through one line at a time, then insert into hash table
+    - use a rehash function (start dictionary size around 100,000 then rehash up)
+
+
+
+programming with multiple files:
+    - only want to compile the code that you changed in a big program with multiple files
+    - g++ -c a.cpp (will create an object file)
+        - object file is the machine code file of a.cpp that will be linked with other files
+        - linking object files together will create an executable
+        - g++ a.o b.o c.o main.o
+
+
+
+priority queues and heaps:
+    - priority queue = an abstract data type that supports two operations
+        - insertion operation = inserts new item into priority queue
+        - every item has a key
+        - deleteMin (or deleteMax, but not both)
+            - removes and returns element with the smallest key
+            - deleteMax removes and returns element with largest key
+        
+        examples:
+            - job scheduling (whatever has largest or smallest key, do that task next)
+            - heapsort (worst case nlogn sorting algorithm) 
+            - certain graph algorithms (covered in next topic)
+            - A* search algorithm (finds most optimal path) 
+
+        non-optimal simple implementations:
+            - use a simple linked list, inserting new nodes at start or end
+                - insert would be constant, deleteMin would be linear
+            - use a sorted linked list
+                - insert would be linear, deleteMin would be linear
+            - use an AVL tree (balanced binary search tree)
+                - both insert and deleteMin would have worst-case log time
+                - kinda overkill tho
+
+    - binary heap (or heap)
+        - common data structure used to implement a priority queue
+        - worst case log insert and delete, average case constant time
+        - if you're given all the data at once, it's worst-case linear
+
+        - implement using a complete binary tree
+            - every node has at least two children
+            - every layer except the bottom layer will be full
+            - have to go from left to right for insertion
+
+            - height of node = longest distance from node to leaf (depth of tree)
+                - will have between 2^h and 2^(h+1) - 1 nodes
+                - height of tree with N nodes is floor of log(base2)(N)
+        
+        - will store binary tree inside an array
+            - nodes will be in BFS order in a tree
+            - don't map anything to the 0 index as its children will be index*2 and (index*2)+1
+
+        - impose an ordering property -> heap order property
+            - the key of any node must be <= the keys of all its children
+            - when deleting, you will violate a constraint but then will fix it
+
+        - insert:
+            - originally insert into open spot
+            - "percolate up" = swap with element above it that's bigger
+            - "percolate down" = swap with element below it that's smaller
+            
+
+
+
+
