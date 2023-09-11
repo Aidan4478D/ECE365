@@ -5,8 +5,8 @@
 
 int main() {
     
-    hashTable hash = new hashTable(100000); 
-    
+    hashTable *hash = new hashTable(100000); 
+    hash->insert("hello");    
 
     return 0; 
 }
