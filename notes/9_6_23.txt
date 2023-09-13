@@ -9,7 +9,6 @@ should be case insensitive (convert all capital letters in both dictionary and d
 
 - can ignore member functions that aren't used for this assignment.
 - implement linear probing or double hashing for collision resolution
-
 will be dealing with void pointers then casting them to correct type (
 
 inserting into hash table:

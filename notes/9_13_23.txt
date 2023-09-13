@@ -1,0 +1,113 @@
+complete binary tree
+    - all of the operations actually happen within the array with div by 2
+    - just think of it happening in a tree
+
+    - deleteMin operation
+        - find element with minimum key
+        - remove the last node (decrease the size of the array)
+        - move its value to the root and exchange it with the smaller of its two children
+            - percolate down!
+
+        - can make method more efficient with concept of hole
+        - move elements up in hole, element in last position is only reinserted when correct location is found
+
+    - insertion requires no more than log (base2) N comparisons
+        - goes up and if you ignore last nodes, theres a 50% chance it will take 1 comparison
+        - then 25% chance it will do 2 comparisons
+        - then 12.5% chance it will do 3 comparisons and so on
+    - deleteMin requires at most 2 * log (base2) N comparisons
+
+    - both worst-case O(logN) operations
+        - insertion is often much quicker (2.607 comparisons on avg)
+    
+locating items in a binary heap
+    - binary heaps contain little ordering information
+    - to locate items within a heap you must combine the heap with another data structure like a hash table
+    - key used by hash table to identify an item can be different than key used by binary heap to order nodes
+
+
+other heap operations
+    - decreaseKey
+        - all you have to do is percolate up
+        - if some sort of id is specified (not position) you need a hash table to locate item efficiently
+    - increaseKey
+        - analogous to decreaseKey
+        - requires a percolate down
+    - remove (or delete)
+        - first use decreaseKey to change value to -infinity then call deleteMin
+        - move final item to delete node's location, then percolate it up or down
+    - buildHeap
+        - takes N items as input and creates a binary heap
+        - perform N insert operations; solution requires worst-case time O(N logN) but average case O(N)
+            - insertions take constant average time to perform
+        - another approach that takes worst-case linear time
+        
+          loop i from N/2 down to 1
+              percolateDown(i)
+
+        - N/2 (using integer division) is the position of the parent of the final node in heap
+
+d-Heaps
+    - in a d-heap, each node has d children
+    - much shallower than a binary heap improving insert operation to O(log (base d) N)
+    - deleteMin operation can be slower though as it requires O(d * log (base d) N)
+
+
+merge for priority queues
+    - no efficient way to merge two existing heaps together
+    - can be done in linear time using buildHeap operation
+    - implementations involve pointers and dynamic memory allocation
+    
+    Leftist Heaps
+        - binary tree that uses the same heap order property
+        - not a complete binary tree; quite unbalanced
+        - leftist heap property
+            - null path length NPL(x), of a node x, to be the shortest path from x to a node without two children
+            - if x does not have two children, NPL(x) = 0
+            - if x is a null value, define NPL(x) = -1
+            - for every node x in heap, null path length of lest child is at least as large as that of right child
+
+        - in general, leftist heaps tend to be "left heavy" 
+            - left paths tend to be deeper than right paths
+            - tree consisting of a long path of left nodes is possible
+            - right path down a leftist heap is as short as any path from root to a null
+
+        - depth of right path is kinda equal to the layers filled
+        - insert and deleteMin can be implemented using just the merge operation
+        - insert is just a special case of merge (new node can be treated as a one-node leftist heap)
+        - deleteMin, remove the root and merge the two sub-heaps
+    
+
+        ***** merging *****
+
+        - recursive solution for merging two leftist heaps
+            - if one of heaps is empty, return other heap
+            - otherwise compare roots of both heaps
+            - recursively merge heap with larger root with right sub-heap of the heap with smaller root
+            - assume recursive call works in a way that the merge of these two heaps works correctly without voilating properties
+            - step still may violate leftist heap property but can be fixed with swap of root's children
+        - time to perform merge is proportional to sum of length of right paths
+        - obtain an O(logN) time bound to merge two heaps
+
+
+        - iterative solution
+            - first merge the two right paths of the two leftist heaps
+            - walk up the new right path, checking for violations of the leftist heap property
+            - when a violation at a node is found, swap the nodes children
+        - pretty much does the same swaps in the same order as the recursive solution
+        
+    Skew Heaps
+        - another implementation of a priority queue with an efficient method of merging
+        - no information is maintained concerning null path lengths
+        - binary trees with heap order property but no strucutral constraint
+        - can become very unbalanced, and the worst-case running time of all operations is O(N)
+        - guarenteed that for M consecutive operations, starting with an empty structure and input N, total worst-case running time is O(M log N)
+            - call that O(log N) amortized cost per operation
+            - guarenteed average
+
+
+
+
+
+
+
