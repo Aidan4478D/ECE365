@@ -23,7 +23,7 @@ int hashTable::insert(const string &key, void *pv) {
     
     //if the hash table is >= 50% filled, add more spots to the table
     //if you cant add more spots to the table return an error
-    if (((double)filled / capacity) >= 0.5) {
+    if (filled >= capacity/2.0) {
         
         //rehash fail check
         if(!rehash())
