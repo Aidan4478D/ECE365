@@ -43,13 +43,13 @@ int main() {
         
         //get content of line from file, if line is empty quit the loop
         getline(dict, line);
-        if(line.empty()) break;
+        if(line.empty()) continue;
         
         //convert line to lowercase
         line = lowerString(line); 
 
         //insert each line in dictionary into hash table
-        hash->insert(line); 
+        hash->insert(line);
     }
     
     clock_t t2 = clock(); 
@@ -100,14 +100,14 @@ int main() {
                 ouf << "Long word at line " << line_number << ", starts: " << word << "\n"; 
                 
                 //go to the next word seperator, then set the word to be empty
-                while((x >= 97 && x <= 122) || (x == 39) || (x == '-')) {
+                while((x >= 48 && x <= 57) || (x >= 97 && x <= 122) || (x == 39) || (x == '-')) {
                     x = line[++i]; 
                 }
                 word = ""; 
             }
 
-            //if the letter is lowercase, an apostrophe, or hyphen, add it onto the word
-            else if ((x >= 97 && x <= 122) || (x == 39) || (x == '-')) {
+            //if the letter is lowercase, a digit, an apostrophe, or hyphen, add it onto the word
+            else if ((x >= 48 && x <= 57) || (x >= 97 && x <= 122) || (x == 39) || (x == '-')) {
                 word = word + x;
             }
 
@@ -123,8 +123,18 @@ int main() {
         for(int i = 0; i < buffer.size(); i++) {
             
             //final purge to get out any empty lines that somehow made it in
-            if (!buffer[i].length()) continue; 
-            
+            if (!buffer[i].length()) continue;
+
+            //checks if a word contains a digit. If it does, do not spell check it. 
+            bool digit = false; 
+            for(auto x : buffer[i]) {
+                if (x >= 48 && x <= 57) {
+                    digit = true;
+                    break; 
+                }
+            }
+            if(digit) continue; 
+
             //write to output file if the word isn't in the hash table
             if(!hash->contains(buffer[i])) {
                 ouf << "Unknown word at line " << line_number << ": " << buffer[i] << "\n"; 

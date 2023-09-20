@@ -25,9 +25,8 @@ int hashTable::insert(const string &key, void *pv) {
     //if you cant add more spots to the table return an error
     if (((double)filled / capacity) >= 0.5) {
         
-        bool increase = rehash(); 
         //rehash fail check
-        if(!increase)
+        if(!rehash())
             return 2; 
     }
     
@@ -158,8 +157,3 @@ unsigned int hashTable::getPrime(int size) {
     //return biggest prime in array if requested number is too big
     return primes[NUM_PRIMES - 1]; 
 }
-
-
-
-
-
