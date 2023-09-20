@@ -1,0 +1,43 @@
+bionomial queue = another implementation of a priority queue
+    - guarentee worse case O(log N) time per opertation (merging, insertion, deleteMin)
+    - insertions take constant average time, as with binary heaps
+    - not a single heap-ordered tree, but a collection of heap ordered trees
+        - collection of trees = forest
+
+binomial trees
+    - each of the heap-ordered trees is of a constrained form known as a binomial tree
+    - binomial tree, of height k, is formed by attaching a binomial tree (depth k-1) to the root of another binomial tree
+        - one with the larger root goes lower
+        - may be at most one binomial tree of every height
+    - children of the root of a binomial tree is a valid binomial queue
+    - overall good data structure if you need to merge
+
+    - binomial tree of height k has exactly 2^k nodes
+        - in a binomial tree of height k, number of nodes at depth d is the binomial coefficient k choose d
+        - related to pascals triangle
+    
+    merging two binomial queues
+        - similar to binary addition
+            - it's literally just binary addition
+        - just add the two trees, inserting one into the other (keep heap order property tho)
+        - when there's three of the same depth trees, arbitrarily keep one and add the other two
+
+        - combining two binomial trees takes constant time
+        - there are O(log N) binomial trees, so the merge takes O(log N) time
+
+    insertion for binomial queues
+        - insert is treated as a special case of merge
+        - takes worst-case logarithmic time
+        - turns out that insert takes avg-case constant time
+        - assume there is a 50% chance that a tree of any particular height will be present in an arbitrary binomial queue
+
+    deleteMin
+        - can also be implemented with merge operation
+        - node with smallest key must be root of one of binomial trees
+        - when root is moved from a binomial tree, the result is a binomial queue
+            - therefore, have two binomial queues to merge
+
+    implementation
+        - nodes store leftmost child and right sibling
+        - children are arranged in decreasing size
+    
