@@ -1,0 +1,131 @@
+graphs
+    - consists of a set of verticies (points, nodes, or items(=)
+    - as well as a set of edges (arcs, lines, links, or connections)
+
+    - edges can be expressed as a pair (v,w) s.t. v, w are on the set of V
+    - typically do not repeat the same edge twice in the set of edges, E
+
+    - sometimes every edge will have an associated cost or weight
+        - call these graphs "weighted graphs" otherwise it's an "unweighted graph"
+
+    - edges can be directed or undirected
+        - if directed, we are dealing with a directed graph
+        - otherwise it's an undirected graph
+        - it's possible to have a mixed graph with both directed and undirected edges
+        
+    - adjacency
+        - a vertex w is said to be adjacent to vertex v iff (v, w) are on the set of E (all edges)
+        - in an undirected graph, (v, w) = (w, v)
+        - in a directed graph, can have v adjacent to w but w not adjacent to v
+
+    - paths
+        - sequence of verticies w1, w2, ..., wn such that (wi, wi+1) is on the set of E
+        - length of path = number of edges on the path (n-1)
+        - simple path = path where all verticies are distinct
+            - last node can = first node though
+        - loop = edge from a vertex to itself
+        
+    - cycle
+        - path length of at least 1 s.t. w1 = wn
+        - cycle is simple if path is simple
+        - for undirected graphs, all edges are distinct
+
+    - connected graphs
+        - undirected graph is connected if there is a path from every vertex to every other vertex
+            - said to be strongly connected if it has this property
+        - weakly connected = if directed graph is not connected strongly, but underlying graph is connected, directed graph
+        - maximal connected subgraphs = undirected graph that cannot be divided into connected components
+            - no path from a vertex in one subgraphs to a vertex in another subgraph
+        - complete = edge between every pair of verticies
+
+    - drawing graphs
+        - verticies are usually circles or dots
+        - label inside of circle with name or identifier of vertex
+        - edges in directed graphs represented as arrows
+        - edges in undirected graphs are usually line segments
+        - weighted graph has cost over line
+
+    - analyzing graph algorithms
+        - generally consider number of both verticies and edges: |V| and |E|
+        - V = set of verticies, E = set of edges
+            - undirected graph, |E| <= |V| * (|V| - 1) / 2
+            - direted graph, |E| <= |V|^2
+
+    - storing graphs
+        - adjacency matrices
+            - 2D array
+            - for edge (u,v) in an unweighted graph, the slot A[u][v] = 1
+                - all other slots = 0
+            - if edges havea ssociated weights or costs, array slot is set to the weight for exisiting edges
+            - no obvious space requirement of big-theta(|V|^2)
+
+            - appropriate if we are dealing with a dense graph: |E| = approx. |V|^2
+            - when dealing with an undirected graph, have to store values in about 1/2 of the matrix (above or below main diagonal)
+            
+            - for most applications, will be dealing with sparse graphs = |E| << |V|^2
+            - sparse graphs, it's better to use an adjacency list representation
+                - store a list of outgoing edges to all adjacent verticies
+                - can be done in array or vector of linked lists
+                - header nodes (slots of array) can store additional info about verticies
+                - space requirement is big-theta(|E| + |V|), huge benefit over adjacency matrices
+            - adjacency matrices can determine whether a node exists in constant time while adjacent list = linear
+
+    - named verticies
+        - if names of verticies are strings, each name must be mapped to a place in memory
+        - hash table can be useful to store this mapping
+
+    - topological sorts
+        - apply to directed asyclic graphs
+            - edges are directed
+            - assuming no cycles
+        - order the verticies of a DAG in such a way so that if there is a path from vi to vj, vi appears before vj in ordering
+        - given a DAG, # of verticies s.t. every directed edge points from a lowered number vertec to a higher number
+        - given a DAG, rearrange verticies on a horizontal line s.t. all directed edges point from left to right
+        - often there are multiple valid orderings, any of the valid orderings are accpetable
+
+        - source = vertex with no incoming edges
+        - sink = vertedx with no outgoing edges
+        
+        - simple algorithm:
+            - find any source (quit if there are none)
+            - display or number this vertex
+            - remove the newly numbered vertex along with its outgoing edges from the graph
+            - repeat this process for the rest of the graph
+        
+            - time complexity is big-theta(|V| + |E|) if adjacency lists are used
+                - body of the inner loop is executed at most once per edge
+                - if algorithm fails (not every vertex gets numbered) then there is a directed cycle in the graph
+
+    - shortest path algorithms
+        - if we are dealing with a weighted graph, and each eadge has an associated cost, the cost of a path = sum of costs of edges
+        - path cost = weighted path length
+        - unweighted path length = number of edges on the path
+        
+        - single source shortest-path problem
+            - given as in input a weighted graph, G = (V, E), and a distinguished vertex s, find the shortest weighted path from s to every other vertex in G
+            - simplest if we can assume no negative costs
+            - may not have an answer if there can be a negative-cost cycle
+        
+        unweighted path length
+            - only handles an unweighted graph
+            - define path cost = number of edges on path
+            - simple algorithm:
+                - assign distance of the distinguished vertex, s, to 0 and push s onto a queue
+                - as long as the queue isn't empty, pop a vertex, v, from the queue
+                    - set distance of w to be one greater than distance of v and w is known
+                    - push w onto the queue
+                - very similar to BFS using the starting node
+
+        dijkstra's algrorithm (very important!!!)
+            - weighted graph with no negative-cost edges
+            - want to find shortest weighted path from a single source to all other nodes
+
+
+
+
+
+
+
+
+
+
