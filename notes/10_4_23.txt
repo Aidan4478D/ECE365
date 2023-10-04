@@ -1,0 +1,124 @@
+single source shortest path problem
+    - given a weighted graph and a distinguished vertex, s, find the shortest weighted path from s to every other vertex
+
+
+dijkstra's algorithm
+    - weighted graph with no negative-cost edges
+    - find shortest weighted path from single source to all other nodes
+    
+    - keep track of vertices which have already computed the knwon minimum distance from the specified source, s
+    - refer to vertices for which final/shortest/best distances, d, are knwon as known vertices
+    - vertices for which the final distances are not yet known as unknown vertices
+    
+    - for each unknown vertex, v, also keep track of a tentative distance, dt, which represents the shortest path from s to v using only known vertices
+    - will alsp keep track of p, the previous vertex on the path to v leading to dt
+        - this way you can get the path that led to the final distance
+
+
+    WeightedPLDijkstra (Graph G, Vertex s)
+        for each vertex v in G
+            dv = infinity
+            knownv = false
+        d(start) = 0
+        p(start) = NULL
+
+        while there are still unknwon vertices
+            v = the unknown vertex within the smallest d-value
+            knownv = true
+            
+            for each edge from v to vertex w
+                if dv + cvw < dw
+                    dw = dv + cvw
+                    pw = v
+
+
+    - assume use of adjacency lists to store the outgoing edges from each vertex
+    - use a priority queue to find the samllest d value
+    - to find unknown vertex with the smallest cost, it also takes up to linear time to find all outgoing edges from a vertex
+    - time complexity is O(|V| * log|V| + |E| * log|V|)
+        - |V| * log|V| comes from the deleteMin to find d
+        - |E| * log|V| comes from going through each edge
+
+        = O(|E| * log|V|)
+            - this term will dominate
+
+    - dijkstra's algorithm = a greedy algorithm
+        - not always optimal
+
+
+Bellman-Ford algorithm
+    - single-source shortest-path problem that may have negative-cost edges
+    - want to find shortest weighted path from single source to all other nodes
+    - if there are negative-cost cyckes, there is no solution
+
+    - significantly slower than djikstra's algorithm for a sparse graph, necessary if we are allowing negative-cost edges
+    - will return false if a negative cycle is present and true otherwise
+
+    - d is distance
+    - c is cost
+    - p is previous node (node to get to current node)
+
+    WeightedPLBellmanFord (Graph G, Vertex s) 
+        for each vertex v in G
+            d(vertex) = infinity
+        d(start) = 0
+        p(start) = NULL
+
+        repeat |V| - 1 times
+            for every edge (v, w)
+                if dv + c(v,w) < dw
+                    dw = dv + cvw
+                    pw = v
+        
+        for every edge (v, w)
+            if dv + cvw < dw
+                return false
+
+        return true
+
+
+
+    - if you know you're dealing with a DAG, there's an algorithm that's more efficient than dijkstra
+        - DAG = directed acyclic graph
+        - some implementaitons for this use case start by performing a topological sort
+
+
+
+Minimum spanning trees
+    - a spanning tree for an undirected graph, G, is a tree that connects all the vertices in G
+    - minimum spanning tree = spanning tree that the sum of the costs of all edges in the tree is minimized
+
+    - want to come up with algorithm that analyzes an undirected graph and comes up with the minimum spanning tree
+    - often there are multiple minimum spanning trees that share the same cost
+        - free to pick any of the optimal spanning trees
+
+    - minimum spanning tree only exists if the graph is connected
+    - robust algorithm would determine of the graph is connected
+
+
+    - number of edges in a minimum spanning tree = |V| - 1
+    - if any edge is added to any spanning tree a cycle is created
+        - removing any edge on the cycle reinstates the spanning tree property
+        - if the edge has a lower cost than the removed edge, cost of spanning tree is decreased
+
+    - two important concepts are cuts and crossing edges
+        - given any graph G, if you take any two sets of vertices, it's considered a cut
+            - you have two distinct subsets of vertices and every vertex is in either set
+            - any edge that crosses across the cut is called a crossing edge
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
