@@ -41,11 +41,11 @@ int hashTable::insert(const string &key, void *pv) {
     item->isDeleted = false; 
     item->pv = pv; 
   
-    while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
+    while(data[hash_val].isOccupied || !data[hash_val].isDeleted) {
         
         //increment index - linear probing
-        hash_val++; 
-
+        hash_val++;
+        
         //break out of loop if you've iterated through the entire table somehow
         iterations++; 
         if(iterations > capacity) return -1; 
@@ -84,7 +84,7 @@ void* hashTable::getPointer(const string &key, bool *b) {
 }
 
 
-int hashTable::setPointer(const &key, void *pv) {
+int hashTable::setPointer(const string &key, void *pv) {
     
     //set data pointer value to pv if key is found
     if(contains(key)) {
@@ -126,12 +126,12 @@ int hashTable::findPos(const string &key) {
     int hash_val = hash(key); 
     int iterations = 0; 
 
-    while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
+    while(data[hash_val].isOccupied || !data[hash_val].isDeleted) {
         if (data[hash_val].key == key) return hash_val; 
         
         //increment index - linear probing
         hash_val++; 
-
+        
         //break out of loop if you've iterated through the entire table somehow
         iterations++; 
         if(iterations > capacity) break; 
