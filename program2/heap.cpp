@@ -13,7 +13,7 @@ heap::heap(int capacity):mapping(capacity*2) {
 int heap::insert(const string &id, int key, void *pv) {
     
     //if heap is filled to capacity
-    if(data.size() == capacity) return 1; 
+    if(filled == capacity) return 1; 
 
     //if node with id already exists (i.e. in hash table) 
     if(mapping.contains(id)) return 2; 
@@ -23,21 +23,53 @@ int heap::insert(const string &id, int key, void *pv) {
     new_node->id = id; 
     new_node->key = key; 
     new_node->pv = pv; 
-
     
-    //do some percolating up
-
-
-    capacity++; 
-
+    //insert the data at ending position then percolate it up
+    data[++filled] = new_node;
+    percolate_up(filled); 
+    
     return 0; 
 }
 int heap::setKey(const string &id, int key) {
+
+    //id is not in the hash table
+    if(!mapping.contains(id)) return 1; 
+    
+    //get position of first node
+    node *new_node = nullptr;
+    int pos = getPos(new_node); 
+
+    //perform increasekey and decreasekey logic
+
+    //set new key
+    data[pos].key = key;    
 
     return 0; 
 }
 
 int heap::deleteMin(string *pId, int *pKey, void *ppData) {
+    
+    //heap is empty
+    if(filled == 0) return 1; 
+    
+    //get deleted node and percolate the other values down
+    node deleted_node = data[0];
+    percoalteDown(filled);
+    
+    //make checks and set pointer variables to deleted node values
+    if(pId) 
+        pId = deleted_node.id;
+    if(pKey)
+        pKey = deleted_node.key; 
+    if(ppData)
+        ppData = deleted_node.pData;
+
+    //remove id from hash table
+    mapping.remove(deleted_node.id); 
+
+    if(pId != nullptr) 
+
+
 
     return 0; 
 }
@@ -49,9 +81,7 @@ int heap::remove(const string &id, int *pKey, void *ppData) {
 
 
 int heap::getPos(node *pn) {
-
     int pos = pn - &data[0];
-
     return pos;
 }
 
