@@ -1,13 +1,18 @@
 #include "heap.h"
+#include "hash.h"
+#include <vector>
 
 //heap logic
-//note: left child of node is stored in position 2*i + 1
+//note: left child of node is stored in position 2*i + 1 or bitshift left by 1
 
 
-heap::heap(int capacity):mapping(capacity*2) {
+heap::heap(int capacity_):mapping(capacity_*2) {
+    
+    capacity = capacity_; 
+    filled = 0; 
 
     // Allocate space for the nodes (0 slot is not used)
-    data.resize(capacity+1);
+    data.resize(capacity_+1);
 }
 
 int heap::insert(const string &id, int key, void *pv) {
@@ -19,17 +24,15 @@ int heap::insert(const string &id, int key, void *pv) {
     if(mapping.contains(id)) return 2; 
 
     //creates new node object
-    node *new_node; 
-    new_node->id = id; 
-    new_node->key = key; 
-    new_node->pv = pv; 
+    node *new_node = new node(id, key, pv);  
     
     //insert the data at ending position then percolate it up
-    data[++filled] = new_node;
-    percolate_up(filled); 
+    data[++filled] = *new_node;
+    percolateUp(filled); 
     
     return 0; 
 }
+
 int heap::setKey(const string &id, int key) {
 
     //id is not in the hash table
@@ -53,29 +56,29 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData) {
     if(filled == 0) return 1; 
     
     //get deleted node and percolate the other values down
-    node deleted_node = data[0];
-    percoalteDown(filled);
+    node deleted_node = data[1];
+
+    //remove node from hash table
+    mapping.setPointer(deleted_node.id, &deleted_node); 
+    mapping.remove(deleted_node.id); 
     
     //make checks and set pointer variables to deleted node values
-    if(pId) 
-        pId = deleted_node.id;
-    if(pKey)
-        pKey = deleted_node.key; 
-    if(ppData)
-        ppData = deleted_node.pData;
+    if (pId) *pId = deleted_node.id;
+    if (pKey) *pKey = deleted_node.key; 
+    if (ppData) *(static_cast<void **> (ppData)) = deleted_node.pData;
 
-    //remove id from hash table
-    mapping.remove(deleted_node.id); 
-
-    if(pId != nullptr) 
-
-
+    
+    //percolate down last element
+    data[1] = data[filled--]; 
+    percolateDown(1);
 
     return 0; 
 }
 
 int heap::remove(const string &id, int *pKey, void *ppData) {
     
+    filled--; 
+
     return 0; 
 }
 
@@ -86,7 +89,7 @@ int heap::getPos(node *pn) {
 }
 
 
-void percolateUp(int posCur) {
+void heap::percolateUp(int posCur) {
 
     //bring newly inserted element to the front of the array (unused entry)
     data[0] = data[posCur]; 
@@ -119,7 +122,7 @@ void percolateUp(int posCur) {
 
 
 
-void percolateDown(int posCur) {
+void heap::percolateDown(int posCur) {
 
     //bring element at position to front of array
     data[0] = data[posCur];
@@ -135,7 +138,7 @@ void percolateDown(int posCur) {
         posCur = posCur << 1;  
 
         //switching to left and right children
-        if(posCur != filled && data[posCur + 1].key < data[posCur])
+        if(posCur != filled && data[posCur + 1].key < data[posCur].key)
             posCur++;
 
         //swapping nodes down if original node key > current node key

@@ -7,7 +7,28 @@
 using namespace std; 
 
 class heap {
- 
+    
+    class node { // An inner class within heap
+        public:
+            std::string id; // The id of this node
+            int key; // The key of this node
+            void *pData; // A pointer to the actual data
+
+            node(string id_ = "", int key_ = 0, void *pData_ = nullptr) {
+                id = id_;
+                key = key_;
+                pData = pData_; 
+            }
+    };
+
+    int getPos(node *pn);
+    void percolateUp(int posCur);
+    void percolateDown(int posCur);
+
+    int capacity, filled;
+    vector<node> data;
+    hashTable mapping;
+
     public: 
         // heap - The constructor allocates space for the nodes of the heap
         // and the mapping (hash table) based on the specified capacity
@@ -68,24 +89,6 @@ class heap {
         //   1 if a node with the given id does not exist
         //
         int remove(const std::string &id, int *pKey = nullptr, void *ppData = nullptr);
-
-        //given node class
-        class node { // An inner class within heap
-            public:
-                std::string id; // The id of this node
-                int key; // The key of this node
-                void *pData; // A pointer to the actual data
-        };
-
-    private:
-        int capacity, filled;
-        vector<node> data;
-        hashTable mapping;
-
-        void percolateUp(int posCur);
-        void percolateDown(int posCur);
-        int getPos(node *pn);
-
 }; 
 
 
