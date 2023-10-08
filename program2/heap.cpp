@@ -25,7 +25,8 @@ int heap::insert(const string &id, int key, void *pv) {
 
     //creates new node object
     node *new_node = new node(id, key, pv);  
-    
+    mapping.insert(id, new_node); 
+
     //insert the data at ending position then percolate it up
     data[++filled] = *new_node;
     percolateUp(filled); 
@@ -38,14 +39,16 @@ int heap::setKey(const string &id, int key) {
     //id is not in the hash table
     if(!mapping.contains(id)) return 1; 
     
-    //get position of first node
-    node *new_node = nullptr;
-    int pos = getPos(new_node); 
+    //gets node and position in array
+    node *pn = static_cast<node *> (mapping.getPointer(id));
+    int pos = getPos(pn);
 
-    //perform increasekey and decreasekey logic
+    int old_key = pn->key; 
+    pn->key = key; 
 
-    //set new key
-    data[pos].key = key;    
+    //place new key into correct position
+    if(old_key < key) percolateDown(pos); 
+    else percolateUp(pos);
 
     return 0; 
 }
@@ -66,10 +69,10 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData) {
     if (pId) *pId = deleted_node.id;
     if (pKey) *pKey = deleted_node.key; 
     if (ppData) *(static_cast<void **> (ppData)) = deleted_node.pData;
-
     
-    //percolate down last element
+    //bring last element to front, update hash table, and percolate down
     data[1] = data[filled--]; 
+    mapping.setPointer(data[1].id, &data[1]); 
     percolateDown(1);
 
     return 0; 
@@ -77,7 +80,26 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData) {
 
 int heap::remove(const string &id, int *pKey, void *ppData) {
     
-    filled--; 
+    //id is not in the hash table
+    if(!mapping.contains(id)) return 1; 
+    
+    //gets node and position in array
+    node *pn = static_cast<node *> (mapping.getPointer(id));
+    mapping.remove(id); 
+    
+    int pos = getPos(pn);
+    
+    //fill in the pointers if provided
+    if (pKey) *pKey = pn->key; 
+    if (ppData) *(static_cast<void **> (ppData)) = pn->pData;
+    
+    //bring last node into deleted nodes position and update hash table
+    data[pos] = data[filled--]; 
+    mapping.setPointer(data[pos].id, &data[pos]);  
+
+    //place new key into correct position
+    if(data[pos].key < data[pos >> 1].key) percolateUp(pos); 
+    else percolateDown(pos);
 
     return 0; 
 }
