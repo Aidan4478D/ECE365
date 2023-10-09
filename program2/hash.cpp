@@ -125,12 +125,12 @@ int hashTable::findPos(const string &key) {
     int hash_val = hash(key); 
     int iterations = 0; 
 
-    while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
-        if (data[hash_val].key == key) return hash_val; 
+    while(data[hash_val].isOccupied ) {
+        if (data[hash_val].key == key && !data[hash_val].isDeleted) return hash_val; 
         
         //increment index - linear probing
         hash_val++; 
-        
+
         //break out of loop if you've iterated through the entire table somehow
         iterations++; 
         if(iterations > capacity) break; 

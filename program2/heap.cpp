@@ -34,21 +34,21 @@ int heap::insert(const string &id, int key, void *pv) {
     return 0; 
 }
 
-int heap::setKey(const string &id, int key) {
+int heap::setKey(const string &id, int key_) {
 
     //id is not in the hash table
     if(!mapping.contains(id)) return 1; 
     
     //gets node and position in array
     node *pn = static_cast<node *> (mapping.getPointer(id));
-    int pos = getPos(pn);
-
-    int old_key = pn->key; 
-    pn->key = key; 
+    
+    //store old key into variable and set node to new key value
+    int old_key = data[getPos(pn)].key; 
+    data[getPos(pn)].key = key_;
 
     //place new key into correct position
-    if(old_key < key) percolateDown(pos); 
-    else percolateUp(pos);
+    if(old_key < key_) percolateDown(getPos(pn)); 
+    else percolateUp(getPos(pn));
 
     return 0; 
 }
@@ -98,7 +98,7 @@ int heap::remove(const string &id, int *pKey, void *ppData) {
     mapping.setPointer(data[pos].id, &data[pos]);  
 
     //place new key into correct position
-    if(data[pos].key < data[pos >> 1].key) percolateUp(pos); 
+    if(data[pos].key < data[pos >> 1].key && pos > 1) percolateUp(pos); 
     else percolateDown(pos);
 
     return 0; 
@@ -115,7 +115,8 @@ void heap::percolateUp(int posCur) {
 
     //bring newly inserted element to the front of the array (unused entry)
     data[0] = data[posCur]; 
-
+    mapping.setPointer(data[0].id, &data[0]); 
+    
     //initially set previous node to be where you initially insert
     int prev_node = posCur; 
 
@@ -130,6 +131,7 @@ void heap::percolateUp(int posCur) {
             
             //move element down
             data[prev_node] = data[posCur]; 
+            mapping.setPointer(data[prev_node].id, &data[prev_node]); 
         }
 
         //if it's not less than parent key, it's in the correct place
@@ -140,6 +142,7 @@ void heap::percolateUp(int posCur) {
     
     //insert original data into correct position w/o violating heap order property
     data[prev_node] = data[0]; 
+    mapping.setPointer(data[prev_node].id, &data[prev_node]); 
 }
 
 
@@ -148,6 +151,7 @@ void heap::percolateDown(int posCur) {
 
     //bring element at position to front of array
     data[0] = data[posCur];
+    mapping.setPointer(data[0].id, &data[0]); 
     
     //initially set previous node to be where you initially insert
     int prev_node = posCur; 
@@ -164,8 +168,10 @@ void heap::percolateDown(int posCur) {
             posCur++;
 
         //swapping nodes down if original node key > current node key
-        if(data[0].key > data[posCur].key) 
+        if(data[0].key > data[posCur].key) {
             data[prev_node] = data[posCur];
+            mapping.setPointer(data[posCur].id, &data[posCur]); 
+        }
 
         //otherwise node is in correct place so break loop
         else break; 
@@ -176,6 +182,8 @@ void heap::percolateDown(int posCur) {
     
     //updating tree to insert node in correct position
     data[prev_node] = data[0]; 
+    mapping.setPointer(data[prev_node].id, &data[prev_node]); 
+
 }
 
 
