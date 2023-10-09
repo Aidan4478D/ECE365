@@ -44,8 +44,8 @@ int hashTable::insert(const string &key, void *pv) {
     while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
         
         //increment index - linear probing
-        hash_val++; 
-
+        hash_val++;
+        
         //break out of loop if you've iterated through the entire table somehow
         iterations++; 
         if(iterations > capacity) return -1; 
@@ -69,6 +69,43 @@ bool hashTable::contains(const string &key) {
     return val; 
 }
 
+void* hashTable::getPointer(const string &key, bool *b) {
+    
+    //if the key isn't found, set b to false and return nullptr
+    if(!contains(key)) {
+        if(b) *b = false; 
+        return nullptr;
+    }
+
+    //otherwise set b to true and return the associated ptr
+    if(b) *b = true; 
+    return data[findPos(key)].pv; 
+}
+
+
+int hashTable::setPointer(const string &key, void *pv) {
+    
+    //set data pointer value to pv if key is found
+    if(contains(key)) {
+        data[findPos(key)].pv = pv; 
+        return 0; 
+    }
+    return 1; 
+}
+
+
+bool hashTable::remove(const string &key) {
+    
+    //lazy deletion if key is found
+    if(contains(key)) {
+        data[findPos(key)].isDeleted = true;
+        return true;
+    }
+
+    return false; 
+}
+
+
 int hashTable::hash(const string &key) {
     
     /* hash function from 
@@ -88,8 +125,8 @@ int hashTable::findPos(const string &key) {
     int hash_val = hash(key); 
     int iterations = 0; 
 
-    while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
-        if (data[hash_val].key == key) return hash_val; 
+    while(data[hash_val].isOccupied ) {
+        if (data[hash_val].key == key && !data[hash_val].isDeleted) return hash_val; 
         
         //increment index - linear probing
         hash_val++; 
