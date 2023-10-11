@@ -1,0 +1,134 @@
+spanning tree for an undirected graph = a tree that connects all the verticies in G
+minimum spanning tree = spanning tree s.t. sum of the costs of al ledges in the tree is minimized
+    - sometimes will be multiple; choose any
+    - only exisits if graph is connected
+    
+    - number of edges in any minimum (or general) spanning tree = |V| - 1
+    - any edge that you add to a spanning tree forms a cycle
+        - any edge you take away from the cycle will give you another spanning tree
+    
+    - cut = take the verticies of a graph and split them into two sets (every vertex in one of the two sets)
+    - crossing edge = edge that connects two vertices across a cut 
+        - any minimum crossing edge across a cut is valid to add to a minimum spanning tree
+
+prim's algorithm
+    - start with any vertex, s, and add it as the first vertex of the spanning tree
+    - then, repeatedly add to the spanning tree the minimum edge connecting a vertex already in the spanning tree to a vertex not yet in the spanning tree
+    - add the vertex on the other end of this edge to the spanning tree
+    - continue procedure until all vertices are in the spanning tree
+
+
+prim vs dijkstra
+    - consider vertices already in the spanning tree to be known and others to be unknown
+    - d-value of each unknown vertex represents the cost of the minimum edge connecting it to any known vertex
+    - for known nodes, d-values are irrelevant to algorithm but represent cost of edge that was use to add vertex to spanning tree
+
+    - p-value for each unknown vertex = known vertex responsible for d-value
+    - p-values for each known vertex = parent of the vertex in the spanning tree
+    - update becomes: dw = min(dw, cvw)
+
+    - if we use a binary heap and adjacency lists, running time will be O(|E| * log|V|)
+        - now dealing with an undirected graph s.t. each edge is stored in two adjacency lists
+
+
+    MinimumSpanningTree (Graph G, Vertex s)
+        for each vertex v in G
+            dv = infinity
+            knownv = false
+        d(start) = 0
+        p(start) = NULL
+
+        while there are still unknwon vertices
+            v = the unknown vertex within the smallest d-value
+            knownv = true
+            
+            for each edge from v to vertex w
+                if cvw < dw
+                    dw = cvw
+                    pw = v
+
+
+network flow problems
+    - directed graphs are used for these problems called flow networks
+    - two verticies are designated to be:
+        - source (s) = where material is produced
+        - sink (t) = where material is consumed
+    - using the term material very generally; could be information
+    - flows from souce->sink at a steady rate;
+
+    - each directed edge can be thought as a conduit for material
+        - vertices represent conduit junctions
+        - edge weights c(v,w) represent capacities
+        - each edge also has a current flow f(v,w) -> f(v,w) <= c(v,w)
+        - also specify f(v,w) = -f(v,w) 
+
+    - material flows though vertices withotu collecting in them
+    - rate at which material enters a vertex must = rate at which it leaves vertex
+    - law of flow conservation = sum of entering = sum of leaving
+
+    - algorithm assumes we are trying to maximize flow of material from the source, s, to the sink, t, in a flow network
+
+maximum-flow problem
+    - determine the greatest rate at which material can be shipped from s to t without violating any constraints
+    - uses three types of graphs to discuss the steps for finding a solution
+        - graph = given flow network; indicates capacities of edges, never changes during execution
+        - flow graph = current flow along each edge
+        - residual graph (residual network) = how much additional flow can be pumped along each edge
+            - all edges in this graph has positive weights
+    - initially flow graph has zeros for every edge, residual graph = original path
+
+augmenting paths:
+    - path from the souce to the sink in a residual graph
+    - any augmenting path represents a valid way to push additional flow from the source to the sink
+    - might need to add additional back edges
+    - back edges indicate that we are allowed to undo flow = pumping flow in opposite direction
+        - if we do not allow this, graph may be saturated with suboptimal solutions
+
+
+ford-fulkerson method
+    - effective approach fo solving maximum-flow problem
+    - this is called a method instead of an algorithm as it's quite general
+    
+    FordFulkersonMethod (Graph G, source s, sink t)
+        initialize all flows to 0
+        while there exists an augmenting path p
+            augment the flow f along p as much as possible
+    
+    - still need to decide which augmenting path to use when multiple paths exists
+    - no matter what path is chosen though, final solution will be optimal
+
+cuts in flow networks
+    - cut = partitioning of the vertices of a graph in two sets
+    - lket (S, T) be any cut of the graph G such that the source, s, is a member of S and sink, t, is a member of T
+    - flow from s->t is also the net flow across any such cut
+    - there are 2^(|V|-2) such cuts
+    - means that the value of any flow in a flow network G is bounded by the capacity of any such (S, T) cut of G
+
+
+max-flow, min-cut theorem
+    - maximum possible flow in a flow network = minimum capacity of all (S, T) cuts
+    - any implementation of the ford-folkerson method will ultimately always find the optimal solution
+
+
+how to choose augmenting paths
+    - choose augmenting path that leads to biggest increase in flow (ford-fulkerson algorithm)
+    - choose augmenting path with the fewest number of nodes (edmunds-karp algorithm)
+
+    - implementations use choice 2 involve using BFS from the source to find the augmenting path
+    - an algorithm implemented this way has worst-case running time that is O)|V| * |E|^2)
+    - best known for this problem is O|E| * |V|) 
+
+
+maximum-bipartite-matching problem
+    - graph for which vertices can be decomposed into two disjoint sets s.t. no two graph vertices within the same set are adjacent
+    - all the edges are crossing edges
+    - matching = set of edges that touch eahc vertex at most once; no two edges are incident on the same vertex
+        - determine the matching that uses the maximum number of edges
+
+
+reduction
+    - an instance of one problem can be reduced into an instance of another
+    - if a new problem is reduced into an already-solved problem, a solution to the solved problem can be applied to the new problem too
+    - sometimes, two problems will nto appear similar to each other
+    - notion will be very important when complexity classes and NP-complete problems are discussed later
+
