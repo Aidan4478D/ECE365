@@ -15,6 +15,7 @@ heap::heap(int capacity_):mapping(capacity_*2) {
     data.resize(capacity_+1);
 }
 
+
 int heap::insert(const string &id, int key, void *pv) {
     
     //if heap is filled to capacity
@@ -34,6 +35,7 @@ int heap::insert(const string &id, int key, void *pv) {
     return 0; 
 }
 
+
 int heap::setKey(const string &id, int key_) {
 
     //id is not in the hash table
@@ -41,17 +43,19 @@ int heap::setKey(const string &id, int key_) {
     
     //gets node and position in array
     node *pn = static_cast<node *> (mapping.getPointer(id));
+    int pos = getPos(pn); 
     
     //store old key into variable and set node to new key value
-    int old_key = data[getPos(pn)].key; 
-    data[getPos(pn)].key = key_;
+    int old_key = data[pos].key; 
+    data[pos].key = key_;
 
     //place new key into correct position
-    if(old_key < key_) percolateDown(getPos(pn)); 
-    else percolateUp(getPos(pn));
+    if(old_key < key_) percolateDown(pos); 
+    else percolateUp(pos);
 
     return 0; 
 }
+
 
 int heap::deleteMin(string *pId, int *pKey, void *ppData) {
     
@@ -77,6 +81,7 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData) {
 
     return 0; 
 }
+
 
 int heap::remove(const string &id, int *pKey, void *ppData) {
     
@@ -118,7 +123,7 @@ void heap::percolateUp(int posCur) {
     mapping.setPointer(data[0].id, &data[0]); 
     
     //initially set previous node to be where you initially insert
-    int prev_node = posCur; 
+    int prev_node = posCur;
 
     //bitshift right is equivalent to /2, go till at front of tree
     while ((posCur >> 1) > 0) {
@@ -156,7 +161,7 @@ void heap::percolateDown(int posCur) {
     //initially set previous node to be where you initially insert
     int prev_node = posCur; 
 
-    //bitshift left is equivalent to /2, till up to end of tree
+    //bitshift left is equivalent to *2, till up to end of tree
     //similar implementation to the book in figure 6.12, page 253
     while ((posCur << 1) <= filled) {
         
@@ -164,13 +169,13 @@ void heap::percolateDown(int posCur) {
         posCur = posCur << 1;  
 
         //switching to left and right children
-        if(posCur != filled && data[posCur + 1].key < data[posCur].key)
+        if(posCur < filled && data[posCur + 1].key < data[posCur].key)
             posCur++;
 
         //swapping nodes down if original node key > current node key
         if(data[0].key > data[posCur].key) {
             data[prev_node] = data[posCur];
-            mapping.setPointer(data[posCur].id, &data[posCur]); 
+            mapping.setPointer(data[prev_node].id, &data[prev_node]); 
         }
 
         //otherwise node is in correct place so break loop
