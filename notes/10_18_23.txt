@@ -1,0 +1,120 @@
+depth first search in graph algorithms
+    - consider DFS applied to finite-sized, undirected graphs
+    - assume adjacency lists are used to store graphs
+        - each edge exists in both adjacency lists
+
+    - visit current node first then recursibely visit all it's adjacent neighbors that haven't been visited
+    - mark a node as visited to avoid infinite loops
+    - use a boolean field for a finite graphs in which all nodes have their own data structure
+    
+    - a simple, recursive, implementation has worst-case running time that is O(|V| + |E|)
+
+
+
+depth first spanning trees
+    - as we traverse nodes of a graph using DFS, will call edges that are actually followed tree edges
+    - will call any edge that would lead back to a node that was already visited a back edge
+    - existence of any back edges indicates a cycle in the graph
+    - graphically draw a tree using the tree edges, and depict the (not followed) back edges using dashed lines
+    - graphical depiction demonstrates order in which nodes are visited = depth first spanning tree
+
+    - assuming graph is connect, every edge becomes either a tree or a back edge in the depth-first spanning tree
+
+
+biconnectivity
+    - check if an undirected graph is connected
+        - perform a DFS and check if any node has not been visited
+
+    - graph is biconnected iff there are no vertices whose removal disconnects the rest of the graph
+    - if graph is not biconnected, vertices whose removal would disconnect a graph = articulation points
+        - graph is biconnected iff there are no articulation points
+
+
+
+num and low values
+    - for each vertex, v, in a DF spanning tree there are two parameters:
+        - num(v) = position of v if you number the vertices based in the order in which they are visited in the DFS
+        - low(v) = lowest number, num(w), of all vertices w that can be reached starting at v using zero or more tree edges and optionally one back edge
+
+    - can define low(v) to be minimum of three values
+        1. num(v)
+        2. lowest num(w) among all back edges (v, w)
+        3. lowest low(w) among all tree edges (v, w)
+
+    - values defined in 1 and 2 can be evaluated by looking at v and edges leaving v
+    - definition of 3 is recursive
+
+    - need to evaluate the low of the children before the low of the current node
+        - requires a postorder traversal, also based on a DFS
+
+
+articulation points
+    - root of the DFS spanning tree is an articulation point iff it has more than one child
+    - for any other vertex, v, it is an articulation point iff v has some child w s.t. low(w) >= num(v)
+        - for any child, w, of a node, v, s.t. low(w) >= num(v), w can only get to ancestors of v by going through v
+        - only if part is that if all children have low(w) < num(v), then they (and their descendants) have alternate routes to the top part of the tree
+
+
+euler tour and euler circuits
+
+    - degree of node = how many nodes are incident on it (go to it)
+
+    - euler tour = path in a graph that visits every edge exactly once
+        - only exists in an undirected graph if 0 or exactly two vertices have an odd degree
+    - euler circuit = euler tour that starts and ends on the same vertex
+        - only exists in an undirected graph if every vertex has an even degree
+        - finding euler circuits:
+            - start at any vertex
+            - apply a DFS stopping when back at starting vertex
+            - will never get stuck along the way as every vertex has an even amount of incident edges
+            - might be stuck at dead end w/o having visited every edge when returning to starting vertex
+            - if not stuck, continue and find a larger cycle
+            - if stuck, find the first vertex, v, on the cycle that has additional unexplored edges
+                - apply another DFS to find a cycle starting and eding at v
+                - splice cycle into previous cycle
+                - repeat last few steps until euler cycle is found
+
+            - use linked lists to store the cycles since splicing of shorter cycles into longer cycles is necessary
+            - each node should maintain a pointer to last explored edge in its adjacency lists to avoid repetitive scanning
+            - each search to find the first vertex w/ unexplored edges should start at the point where the last one was found
+            - w/ appropriate data structures, total running time of algorithm is O(|V| + |E|)
+
+hamiltonian path and hamiltonian cycles
+    - hamiltonian path = path in a graph that visits every vertex exactly once
+    - hamiltonian cycle = hamiltonian path that starts and ends on the same vertex
+        - determine if a given graph has a hamiltonian cycle
+
+
+
+next week is midterm!
+    - faculty.cooper.edu/sable2/old_tests/
+        - all midterms and finals are posted here
+        - types of questions are similar
+    - will cover everything through today
+        - heaps, priority queues, graphs
+    - open hard copy notes (written/printed)
+    - five questions, 1:45 exam
+
+
+
+dsa program #3
+    - rely on heap implementation to implement dijkstra's algorithm efficiently
+    - use a hash table to store a node's location in the graph
+        - hash table should store the node name and it's address in memory
+
+    - read one time from the ifle
+        - if node doesn't exist, put it on the end of the linked list
+        - then add to hash table
+    
+    - every node has adjacency list
+        - linked list of edges
+        - destination vertex, and edge cost
+
+    - two nested classes (vertex/node and edge) 
+    
+    - dont allocate heap in graph constructor
+        - don't know how big it's going to be
+
+    - when you call deleteMin, should get the heap void pointer and that should be pointer to the node
+
+
