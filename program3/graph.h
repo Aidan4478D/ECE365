@@ -2,10 +2,12 @@
 #define _GRAPH_H
 
 #include <list> 
+#include <vector>
 #include <tuple> 
 #include <string>
 
 #include "hash.h"
+
 
 using namespace std; 
 
@@ -13,27 +15,22 @@ class graph {
 
     class node { // An inner class within heap
 
-        class edge {
-            
-            public:
-                node *sink; 
-                int cost; 
-        }; 
-
         public:
             std::string id; // The id of this node
-            int dist; //cost of the best path found so far from source->vertex
-            node *prev; //previous node on the path from source->vertex
+            int cost; //cost of the best path found so far from source->vertex
+            bool known; //has the optimal path been found or not
+            
+            node* parent; 
 
             //edges connected to the vertex
-            vector<edge> path; 
-
+            vector<tuple<node*, int>> edges; 
+            
             node() = default; 
     }; 
     
     void createNode(node* temp_node, string id); 
 
-    list<node> nodes; 
+    list<node*> nodes; 
     hashTable mapping; 
 
     int capacity, filled; 
@@ -42,7 +39,7 @@ class graph {
         graph(int size); 
 
         void insert(string start, string dest, int cost); 
-        void djikstra(); 
+        void dijkstra(string source); 
 };
 
 
