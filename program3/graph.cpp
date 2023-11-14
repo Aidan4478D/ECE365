@@ -13,35 +13,35 @@ graph::graph(int size) {
 void graph::createNode(node* temp_node, string id) {
     
     mapping.insert(id, temp_node); 
-
+    
     temp_node->id = id;
     temp_node->cost = INF; 
     temp_node->known = false; 
-
+    temp_node->parent = nullptr; 
+    
     nodes.push_back(temp_node); 
-
-    filled++; 
 }
 
 
 void graph::insert(string source, string sink, int cost) {
 
-    node *temp_source; 
-    node *temp_sink;
+    node *temp_source = new node(); 
+    node *temp_sink = new node(); 
 
     //if the starting vertex is already in the graph
     if(mapping.contains(source)) 
         temp_source = (node*) mapping.getPointer(source); 
-
+    
     //otherwise create new vertex in graph
     else createNode(temp_source, source); 
-
+    
     //if the ending vertex is already in the graph
     if(mapping.contains(sink))
         temp_source = (node*) mapping.getPointer(sink); 
 
     //otherwise create new vertex in graph
     else createNode(temp_sink, sink); 
+    
     
     //add edge in tuple to graph
     tuple<node*, int> edge(temp_sink, cost); 
@@ -65,7 +65,8 @@ void graph::dijkstra(string source) {
     //initialize starting node and where to start heap
     min_edge.setKey(start_node->id, start_node->cost); 
     start_node->cost = 0; 
-
+    
+    //node to store current vertex in graph
     node *temp_node;
 
     //finding edge with smallest cost; or a deleteMin
@@ -95,3 +96,7 @@ void graph::dijkstra(string source) {
         temp_node->known = true; 
     }
 }
+
+
+
+

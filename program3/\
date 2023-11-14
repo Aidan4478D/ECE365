@@ -1,0 +1,59 @@
+#include "graph.h"
+
+#include <vector> 
+#include <ctime> 
+#include <iostream>
+#include <sstream> 
+#include <fstream> 
+
+using namespace std; 
+
+void parseFile() {
+
+    string file_name; 
+    cout << "Please enter the name of an input file: "; 
+    cin >> file_name; 
+
+    ifstream links(file_name); 
+    string line; 
+
+    graph *g = new graph(100);  
+
+    //dictionary insertion
+    while(!links.eof()) {
+        
+        //get content of line from file, if line is empty quit the loop
+        getline(links, line, ' ');
+        if(line.empty()) continue;
+
+        vector<string> content; 
+        string word = ""; 
+
+        for(c : line) {
+            if(c != '\n') {
+                word += c; 
+            }
+            else {
+                content.push_back(word); 
+                word = ""; 
+            }
+        }
+
+        //insert each line in dictionary into hash table
+        graph->insert(content[0], content[1], (int) content[2]);
+    }
+
+}
+
+void generateOutput() {
+    
+
+}
+
+
+int main() {
+    
+    
+
+    return 0; 
+}
