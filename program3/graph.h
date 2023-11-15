@@ -30,7 +30,7 @@ class graph {
                 id = id_;
                 cost = cost_; 
                 known = known_; 
-                parent = parent_; 
+               parent = parent_; 
             }
     }; 
     
@@ -44,6 +44,7 @@ class graph {
 
         void insert(string start, string dest, int cost); 
         void dijkstra(string source); 
+        void generateOutput();
 };
 
 

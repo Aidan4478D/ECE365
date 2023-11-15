@@ -2,6 +2,10 @@
 #include "heap.h"
 
 #include <limits.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <stack>
 
 #define INF INT_MAX
 
@@ -12,14 +16,13 @@ graph::graph(int size) {
 
 void graph::createNode(node* temp_node, string id) {
     
-    mapping.insert(id, temp_node); 
-    
     temp_node->id = id;
     temp_node->cost = INF; 
     temp_node->known = false; 
     temp_node->parent = nullptr; 
     
     nodes.push_back(temp_node); 
+    mapping.insert(id, temp_node); 
 }
 
 
@@ -29,19 +32,17 @@ void graph::insert(string source, string sink, int cost) {
     node *temp_sink = new node(); 
 
     //if the starting vertex is already in the graph
-    if(mapping.contains(source)) 
+    if(mapping.contains(source)) {
         temp_source = (node*) mapping.getPointer(source); 
-    
+    }
     //otherwise create new vertex in graph
     else createNode(temp_source, source); 
     
     //if the ending vertex is already in the graph
-    if(mapping.contains(sink))
-        temp_source = (node*) mapping.getPointer(sink); 
-
+    if(mapping.contains(sink)) 
+        temp_sink = (node*) mapping.getPointer(sink); 
     //otherwise create new vertex in graph
     else createNode(temp_sink, sink); 
-    
     
     //add edge in tuple to graph
     tuple<node*, int> edge(temp_sink, cost); 
@@ -63,14 +64,17 @@ void graph::dijkstra(string source) {
         min_edge.insert(node->id, node->cost, node); 
     
     //initialize starting node and where to start heap
-    min_edge.setKey(start_node->id, start_node->cost); 
     start_node->cost = 0; 
+    min_edge.setKey(start_node->id, start_node->cost); 
     
     //node to store current vertex in graph
     node *temp_node;
 
     //finding edge with smallest cost; or a deleteMin
-    while(!min_edge.deleteMin(nullptr, nullptr, (void**) &temp_node)) {
+    while(!min_edge.deleteMin(nullptr, nullptr, &temp_node)) {
+
+        //if the cost after insertion is still infinity, there's no paths found
+        if(temp_node->cost == INT_MAX) continue; 
         
         //loop through edges that a node/vertex has
         for(auto edge : temp_node->edges) {
@@ -90,7 +94,7 @@ void graph::dijkstra(string source) {
                 edge_node->parent = temp_node; 
                 
                 //update which node to expand off of
-                min_edge.setKey(start_node->id, start_node->cost); 
+                min_edge.setKey(edge_node->id, edge_node->cost); 
             }
         }
         temp_node->known = true; 
@@ -99,4 +103,44 @@ void graph::dijkstra(string source) {
 
 
 
+void graph::generateOutput() {
+    
+    //get name of output file
+    string file_name; 
+    cout << "Please enter the name of an output file: ";
+    cin >> file_name; 
+
+    ofstream of(file_name); 
+    
+    //loop through all the nodes
+    for(auto n : nodes) {
+        
+        //print the name and the colon
+        of << n->id << ": ";
+        
+        //if path is non-optimal and the cost is infinity, there's no path to the node
+		if (!n->known && n->cost == INT_MAX) {
+			of << "NO PATH\n";
+			continue;
+		}
+        
+        //print out cost, initial bracket, and variable to store path
+        of << n->cost << " [";
+		string out_path;
+    
+        //variable to store the parents of node paths
+        node *p = n->parent;
+
+        //loop through parents and add to path
+		while(p != nullptr){
+			out_path += (p->id + ", ");
+			p = p->parent;
+		}
+
+        //write path to output file 
+		of << out_path << n->id << "]\n";
+    }
+    
+    of.close(); 
+}
 

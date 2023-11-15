@@ -1,4 +1,6 @@
 #include "graph.h"
+
+#include <climits>
 #include <stdlib.h>
 
 #include <vector>
@@ -7,10 +9,11 @@
 #include <iostream>
 #include <sstream> 
 #include <fstream> 
+#include <iostream>
 
 using namespace std; 
 
-void parseFile() {
+void parseFile(graph *g) {
 
     string file_name; 
     cout << "Enter name of graph file: "; 
@@ -18,8 +21,6 @@ void parseFile() {
 
     ifstream links(file_name); 
     string line; 
-
-    graph *g = new graph(100);  
 
     //graph insertion
     while(!links.eof()) {
@@ -29,14 +30,14 @@ void parseFile() {
         if(line.empty()) continue;
         
         //make line into stringstream object
-        stringstream check1(line); 
+        stringstream ss_line(line); 
         
         //vector to hold words in a line
         vector<string> tokens; 
         string word = ""; 
         
         //add words to the vector seperated by space
-        while(getline(check1, word, ' ')) 
+        while(getline(ss_line, word, ' ')) 
             tokens.push_back(word);
         
         //insert each line in dictionary into hash table
@@ -56,22 +57,15 @@ void parseFile() {
     double timeDiff = ((double)(t2-t1)) / CLOCKS_PER_SEC;
 
     cout << "Total time (in seconds) to apply Dijkstra's algorithm: " << timeDiff << "\n";
-
-    cout << "Please enter the name of an output file: ";
-    cin >> file_name; 
-
-
-}
-
-void generateOutput() {
-    
-
 }
 
 
 int main() {
     
-    parseFile(); 
+    graph *g = new graph(100);  
+
+    parseFile(g); 
+    g->generateOutput(); 
 
     return 0; 
 }
