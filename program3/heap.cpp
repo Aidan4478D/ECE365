@@ -25,11 +25,10 @@ int heap::insert(const string &id, int key, void *pv) {
     if(mapping.contains(id)) return 2; 
 
     //creates new node object
-    node *new_node = new node(id, key, pv);  
-    mapping.insert(id, new_node); 
+    mapping.insert(id, &data[0]); 
 
     //insert the data at ending position then percolate it up
-    data[++filled] = *new_node;
+    data[++filled] = node(id, key, pv);
     percolateUp(filled); 
     
     return 0; 

@@ -130,10 +130,12 @@ void graph::generateOutput() {
     
         //variable to store the parents of node paths
         node *p = n->parent;
-
+        
         //loop through parents and add to path
 		while(p != nullptr){
-			out_path += (p->id + ", ");
+            
+            //inserts node to start of string and updates parent
+			out_path.insert(0, (p->id + ", "));
 			p = p->parent;
 		}
 
