@@ -32,9 +32,9 @@ void graph::insert(string source, string sink, int cost) {
     node *temp_sink = new node(); 
 
     //if the starting vertex is already in the graph
-    if(mapping.contains(source)) {
+    if(mapping.contains(source)) 
         temp_source = (node*) mapping.getPointer(source); 
-    }
+
     //otherwise create new vertex in graph
     else createNode(temp_source, source); 
     
@@ -119,10 +119,10 @@ void graph::generateOutput() {
         of << n->id << ": ";
         
         //if path is non-optimal and the cost is infinity, there's no path to the node
-		if (!n->known && n->cost == INT_MAX) {
-			of << "NO PATH\n";
-			continue;
-		}
+        if (!n->known && n->cost == INT_MAX) {
+            of << "NO PATH\n";
+            continue;
+        }
         
         //print out cost, initial bracket, and variable to store path
         of << n->cost << " [";
