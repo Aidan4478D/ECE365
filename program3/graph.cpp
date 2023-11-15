@@ -126,21 +126,20 @@ void graph::generateOutput() {
         
         //print out cost, initial bracket, and variable to store path
         of << n->cost << " [";
-		string out_path;
+        string out_path;
     
         //variable to store the parents of node paths
         node *p = n->parent;
         
         //loop through parents and add to path
-		while(p != nullptr){
-            
+        while(p != nullptr) {
             //inserts node to start of string and updates parent
-			out_path.insert(0, (p->id + ", "));
-			p = p->parent;
-		}
+            out_path.insert(0, (p->id + ", "));
+            p = p->parent;
+        }
 
         //write path to output file 
-		of << out_path << n->id << "]\n";
+        of << out_path << n->id << "]\n";
     }
     
     of.close(); 
