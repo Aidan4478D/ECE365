@@ -33,13 +33,6 @@ int hashTable::insert(const string &key, void *pv) {
     //gets hash number index thing based off key
     int hash_val = hash(key); 
     int iterations = 0; 
-
-    //create new hash item with key
-    hashItem *item = new hashItem(); 
-    item->key = key; 
-    item->isOccupied = true; 
-    item->isDeleted = false; 
-    item->pv = pv; 
   
     while(data[hash_val].isOccupied && !data[hash_val].isDeleted) {
         
@@ -55,7 +48,10 @@ int hashTable::insert(const string &key, void *pv) {
     }
 
     //insert item into hash table data
-    data[hash_val] = *item; 
+    data[hash_val].key = key; 
+    data[hash_val].isOccupied = true; 
+    data[hash_val].isDeleted = false; 
+    data[hash_val].pv = pv; 
     filled++; 
 
     return 0; 

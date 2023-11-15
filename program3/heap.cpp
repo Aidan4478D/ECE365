@@ -27,7 +27,7 @@ int heap::insert(const string &id, int key, void *pv) {
     //creates new node object
     mapping.insert(id, &data[0]); 
 
-    //insert the data at ending position then percolate it up
+    //insert the data at ending position then percolate it up, no more memory leak hopefully
     data[++filled] = node(id, key, pv);
     percolateUp(filled); 
     
