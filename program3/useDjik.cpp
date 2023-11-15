@@ -62,7 +62,7 @@ void parseFile(graph *g) {
 
 int main() {
     
-    graph *g = new graph(100);  
+    graph *g = new graph(1000000);  
 
     parseFile(g); 
     g->generateOutput(); 
