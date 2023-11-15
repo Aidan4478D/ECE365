@@ -7,8 +7,6 @@
 #include <fstream>
 #include <stack>
 
-#define INF INT_MAX
-
 graph::graph(int size) {
     
     mapping = hashTable(size); 
@@ -17,7 +15,7 @@ graph::graph(int size) {
 void graph::createNode(node* temp_node, string id) {
     
     temp_node->id = id;
-    temp_node->cost = INF; 
+    temp_node->cost = INT_MAX; 
     temp_node->known = false; 
     temp_node->parent = nullptr; 
     
