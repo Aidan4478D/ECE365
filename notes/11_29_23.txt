@@ -1,0 +1,126 @@
+
+godel's theorem = the first of two theorems referred to godel's incompleteness theorem
+    - response to the efforts of david hilbert who was trying to prove that arithmetic was both consistent and complete
+    - complete system of arithmetic = every true statement can be expressed by the language can be proven within the language
+    - consistent system of arithmetic = one that does not contradict itself
+
+    - godel proved that artihmetic of his day wasn't consistent and complete and also no system capable of expressing all basic facts of arithmetic can be both consistent and complete
+    - for any formal, consistent system capable of expressing all basic arithmetical facts, there must be certain true statements expressible by the language that cannot be proven within the language
+
+    - proof included a very technical portion that, among other things, proved that symbols for expressing certain concepts must exist
+    - the second part of the proof is relatively simple which we'll talk about!
+
+    - nvm the proof was kinda all math and I needed to take notes on diff
+
+Entsheidungs problem
+    - this problem was a challenge to mathematicians to produce a mechanical procedure that could solve all formally expressible yes/no mathematical questions
+    - english term is "decision problem"
+    - turing proved that a solution to the problem is impossible
+
+
+Turing machine
+    - there's a lot of different valid definitions for turing machines though this is one:
+    
+    - the machine consists of a tape that is infinitely long tape in both directions
+        - tape is comprised of an infinite sequence of squares, and each square is either marked or blank
+        - can imagine a read-write head that starts over some starting location
+        - in the original machine, any finite collection of symbols to be used (ex an alphabet) and a special symbol representing a blank cell was allowed
+        - at most a finite number of squares on the tape will be marked with a symbol from the alphabet; the rest will be blank
+
+    - also consists of a finite set of possible internal states
+        - one state is indicated as the initial state
+        - some states are final states (accepting states)
+        - the machine is in one of the states
+
+    - includes a transition function indicating a set of rules
+        - each rule has a specific format:
+            - if we are in state x and read symbol s1, then write symbol s2, move one square (either left or right, specified by rule) and go to state y
+            - ex rule: if we are in state 17 and read 'Q', then write 'Z' and move one square to the left and jump to state 92
+            - this is the only type of action a turing machine is capable of
+        - whenever a turing machine follows a rule that leads to an accepting state, it stops
+        - can't be multiple rules for each certain read and state
+
+    - all definitions will be equivalent in "power" 
+        - power = capable of doing the exact same thing
+        - only implies what is (or is not) possible to perform
+
+    - rules are easily expressible if the symbols are in binary
+
+    - church-turing thesis = any calculation that can be performed by any sort of machine is computable on a turing machine
+        - there's never been a proof to this
+        - turing showed that you can do many many things on it (addition, loops, multiplication, etc.)
+        - reasoned that these were the necessary building blocks for what we now refer to as algorithms
+    
+        - nothing with a finite amount of memory is turing complete
+        - any modern computer is bound by what a turing machien can do
+        - any polynomial time-algorithm that is implemententable on a modern computer can also be implemented as a polynomial-time algorithm on a turing machine
+            - doesn't mean that norhting is more powerful than a turing machine
+
+        - there's been no augmentation of turing machines that have been shown to increase the power of turing machines
+            - ex. multiple tapes does not increase the power of a turing machine
+
+    - universal turing machines
+        - might there be a single turing machine that can simulate all other turing machines?
+        - showed that the answer to this question is yes, and a turing machine this is referred to is a universal turing machine
+        - simulates specified turing machine and applies it to the appropriate input
+        - is itself a turing machine
+
+    - going back to the entsheidungs problem, turing invented the notion of a turing machine to explore the problem
+    - turing proposed a problem now known as the halting problem
+        - devise an algorithm to decide whether the nth turing machine eventually halts on the mth possible input
+        - example of a decision problem = challenges us to find an algorithmic solution to a yes/no question
+        - if an algorithm exists, the problem is said to be decidable, solvable, or computeable; otherwise it's undecideable
+        - turing proved that it's impossible to devise an algorithm which solves the halting problem for all cases
+            - thus the halting problem is undecidable
+            - there's inputs that will make it halt and ones that will make it go infinitely
+            - for ones that keep running you don't know whether it's going infinitely or taking a long time to stop/hasn't finished yet
+    
+    - trouble's algorithm
+        - first assume it's possible to solve the halting problem
+        - if so, could create a function halt(a, i) which accepts two strings representing the encoding of a Turing machine and its input
+        - function should return true if an algorithm a, halts on the input, i, and should refalse otherwise
+        - now looking at this function:
+
+        function Trouble(string s)
+            if halt(s, s) == false:
+                return true
+            else:
+                loop forever
+
+        - if it were possible to write such a function, it must be implemented by some turing machine
+        - let t be the string encoded of that turing machine
+        - trouble(t) then leads to a paradox!
+            - in order to avoid this paradox, it must not be possible to solve the problem completely
+        
+    - turing's proof relied on diagonalization
+        - this proof takes a long time lowkey...
+
+    non-deterministic turing machine
+        - all turing machines that we can produce are deterministic
+            - given the machine and a specific input, there is one direct course of action that will follow
+        - can hypthesize an extension of the turing machine model that is non-deterministic
+        
+        - for every internal state, symbol combination, instead of one action that is always taken, there will be a set of actions
+        - set may contain no actions, one action, or multiple actions
+        - non-deterministic turing machine takes all applicable actions at once, leading to a superposition fo turing machine configurations
+        - as soon as any path leads to an accepting state, the entire machine stops
+        - machine only rejects the input if all pats reject
+
+        - can be simulated by a regular turing machine, but the slowdown would be exponential
+
+
+complexity classes P and NP
+    - a complexity class defines a set of computational problems with similar big-O time or memory bounds for deterministic or non-deterministic turing machines
+    - the class P defines all decision problems that can be solved by a regular turing machine (i.e. an algorithm) in polynomial time
+    - the class NP defines all decision problems that can be solved by a non-deterministic turing machine in polynomial time
+
+    - equivalent to deine NP (rougly) as the set of decision problems for which a yes solution to the problem can be checked by a regular turing machine in polynomial time
+
+    - NP stands for non-deterministic polynomial time
+    - an NP problem can be solved in polynomial time - with a non-deterministic turing machine
+        - some of these problems can also be solved with regular turing machines in polynomial time
+
+p = np? ??? ?? 
+    - widely believed no.
+
+

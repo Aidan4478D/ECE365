@@ -1,0 +1,10 @@
+memoization = type of top down solution when you remember previously computed recursive calls
+
+longest common subsequence problem
+    - find the maximum possible subsequence of two strings
+    - can do this is quadratic time
+
+
+seed random number generators with the date and time
+    - only seed random number generators once when you start the program
+
