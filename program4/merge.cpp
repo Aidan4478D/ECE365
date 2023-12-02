@@ -56,7 +56,7 @@ string checkMerge(string s1, string s2, string merge) {
             }
 
             //otherwise set the matrix cell to be unknown
-			matrix[i][j] = INF;
+            matrix[i][j] = INF;
         }   
     }
     
