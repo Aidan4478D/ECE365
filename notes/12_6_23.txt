@@ -1,0 +1,70 @@
+P = the set of all decision problems (problems that ask a yes or no question) that can be solved by a regular turing machine in polynomial time
+    - if there's any solution to a problem it belings to the class P
+
+NP = non-deterministic polynomial
+    - problems that belong here have polynomial solutions on a non-deterministic turing machine
+    - some have solutions on a regular turing machines
+
+    - alternative def: set of all problems for which yes instances can be verified by a regular turing machine in polynomial time
+        - must be some way to prove the answer is yes (if it is) on a regular turing machine
+        - slowdown would be exponential if solved in P though
+
+    - it's well known that P is a subset of NP
+
+- now there's a question: are there any problems in NP that are not in P? Or are the two complexity classes equivalent?
+- P = NP problem! Is P = NP? 
+    - if there is any problem that is in NP but not in P, it's solvable by a regular turing machine but only with an expoenential-time algorithm
+    - problems are said to be intractable
+
+
+reductions = instance where one problem can be mapped to an instance of another problem
+
+two additonal complexity classes
+    - NP-hard = every decision problem for which every problem in NP can be reduced to it in polynomial time
+    - NP-complete = every decision problem that is in NP and for which every problem that is in NP can be reduced to it in polynomial time
+        - it is NP-hard and is also in NP
+
+        - x is in NP (there's a polynomail solution time by a NP turing machine)
+        - take any other NP problem, reduce it to x in polynomial time, then use solution to x to solve the other problem
+    
+    - NP-hard also allow the class to contain optimization problems
+
+    - if anyone ever solves any NP-complete problem in polynomial time, then we can solve all NP problems in polynomial time
+        - means that P = NP
+
+Cook showed that the boolean satisfiable problem (SAT) is NP-complete with a big ass proof
+    - thus all NP-problems can be reduced down to SAT
+    - Richard Karp showed that 21 problems are NP-complete using reduction
+        - need to reduce a known NP-complete problem to the new problem in polynomial time
+
+    - direction is important
+        - your problem -> NP-complete reveals nothing
+        - NP-complete -> your problem says that your problem is NP complete
+
+
+In the final if there's a question on if something is NP
+    - if you're given an independent set of size k and prove that it's a yes in polynomial time, it's in NP
+
+the partition problem seems like the easiest one ngl
+
+
+approximation alorithms
+    - not guarenteed to give you the best answer, but is guarenteed to give you an answer within a certain percentage of the optimal solution
+    - answer "close" to the best possible solution
+
+    consider an algorithm M applied to an instance x of some optimization problem
+        - c(M(x)) = cost of the solution that M finds
+        - OPT(X) = cost of optimal solution for x
+
+    - M is an e (epsillon) approximation algorithm if it is guarenteed that:
+        |c(M(x)) - OPT(x)| / max(OPT(x), c(M(x))) <= e
+
+    - for maximization problems, cost of solution returned by e-approx algorithm is never less that 1 - e times the optimal solution
+    - for minimization problems, cost of solution returned by e-approx algorithm is never more than 1/(1-e) times the optimal solution
+
+    - there are e-approximation algorithms that have polynomial solutions to NP-complete problems
+
+
+
+
+
